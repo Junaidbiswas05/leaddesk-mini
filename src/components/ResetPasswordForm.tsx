@@ -48,7 +48,7 @@ export default function ResetPasswordForm() {
 
       setSuccess(true)
       setTimeout(() => {
-        router.push('/admin/login')
+        window.location.href = '/admin/login'
       }, 2000)
     } catch (err: any) {
       setError(err.message)
