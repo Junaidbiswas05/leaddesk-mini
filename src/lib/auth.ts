@@ -45,6 +45,9 @@ export const authOptions: NextAuthOptions = {
     signIn: '/admin/login',
   },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      return url
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
