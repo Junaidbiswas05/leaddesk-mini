@@ -33,7 +33,9 @@ export async function POST(request: Request) {
     const smtpConfigured =
       process.env.SMTP_USER &&
       process.env.SMTP_PASS &&
-      process.env.SMTP_PASS !== 'YOUR_GMAIL_APP_PASSWORD_HERE'
+      process.env.SMTP_PASS !== 'YOUR_GMAIL_APP_PASSWORD_HERE' &&
+      process.env.SMTP_PASS !== 'dummy_password_for_now' &&
+      process.env.SMTP_PASS !== 'dummy_password'
 
     if (smtpConfigured) {
       // Send real email
