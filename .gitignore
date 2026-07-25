@@ -3,6 +3,16 @@ node_modules/
 .pnp
 .pnp.js
 
+# AI tool configs — never commit these
+.claude/
+.windsurf/
+.agents/
+.gemini/
+AGENTS.md
+CLAUDE.md
+LOOM_SCRIPT.md
+skills-lock.json
+
 # Build output
 .next/
 out/
@@ -20,8 +30,6 @@ build/
 *.db
 *.db-journal
 prisma/dev.db
-
-# Prisma
 prisma/clear-admins.ts
 
 # Debug
