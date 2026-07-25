@@ -27,8 +27,14 @@ export async function POST(request: Request) {
     const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '15m' })
 
     const requestUrl = new URL(request.url)
-    const baseUrl = process.env.NEXTAUTH_URL || `${requestUrl.protocol}//${requestUrl.host}`
-    const resetLink = `${baseUrl}/admin/reset-password?token=${token}`
+    const rawBaseUrl = process.env.NEXTAUTH_URL || `${requestUrl.protocol}//${requestUrl.host}`
+    const baseUrl = rawBaseUrl.endsWith('/') ? rawBaseUrl.slice(0, -1) : rawBaseUrl
+    
+    // Absolute link for email
+    const emailResetLink = `${baseUrl}/admin/reset-password?token=${token}`
+    
+    // Relative link for UI
+    const resetLink = `/admin/reset-password?token=${token}`
 
     const smtpConfigured =
       process.env.SMTP_USER &&
@@ -40,7 +46,7 @@ export async function POST(request: Request) {
     if (smtpConfigured) {
       // Send real email
       const { sendPasswordResetEmail } = await import('@/lib/email')
-      await sendPasswordResetEmail({ toEmail: user.email, resetLink })
+      await sendPasswordResetEmail({ toEmail: user.email, resetLink: emailResetLink })
       console.log(`[EMAIL SENT] Password reset link sent to: ${user.email}`)
 
       return NextResponse.json({
