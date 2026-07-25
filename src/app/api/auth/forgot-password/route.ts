@@ -26,7 +26,8 @@ export async function POST(request: Request) {
     const secret = process.env.NEXTAUTH_SECRET || 'fallback_secret'
     const token = jwt.sign({ userId: user.id }, secret, { expiresIn: '15m' })
 
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000'
+    const requestUrl = new URL(request.url)
+    const baseUrl = process.env.NEXTAUTH_URL || `${requestUrl.protocol}//${requestUrl.host}`
     const resetLink = `${baseUrl}/admin/reset-password?token=${token}`
 
     const smtpConfigured =
