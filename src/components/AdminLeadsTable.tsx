@@ -98,7 +98,7 @@ export function AdminLeadsTable({ initialLeads }: { initialLeads: Lead[] }) {
           Add Admin
         </button>
         <button
-          onClick={() => signOut({ callbackUrl: `${window.location.origin}/admin/login` })}
+          onClick={() => signOut({ callbackUrl: `${window.location.origin}/` })}
           className="inline-flex items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 bg-white hover:bg-slate-50 transition-colors"
         >
           <LogOut className="h-4 w-4 mr-2" />
