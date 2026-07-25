@@ -7,7 +7,21 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token }) => !!token
+      authorized: ({ req, token }) => {
+        const path = req.nextUrl.pathname
+        
+        // Allow public admin routes
+        if (
+          path.startsWith('/admin/login') ||
+          path.startsWith('/admin/forgot-password') ||
+          path.startsWith('/admin/reset-password')
+        ) {
+          return true
+        }
+        
+        // Require auth for everything else matched
+        return !!token
+      }
     },
     pages: {
       signIn: '/admin/login'
@@ -17,14 +31,8 @@ export default withAuth(
 
 export const config = {
   matcher: [
-    // Protect the entire admin UI — except login, forgot-password, reset-password
-    '/admin',
-    '/admin/((?!login|forgot-password|reset-password).*)',
-
-    // Protect admin API routes (create admin, etc.)
+    '/admin/:path*',
     '/api/admin/:path*',
-
-    // Protect lead status PATCH (not POST which is public for form submissions)
     '/api/leads/:id+'
   ]
 }
