@@ -1,19 +1,10 @@
 import { LoginForm } from '@/components/LoginForm'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { redirect } from 'next/navigation'
 
 export const metadata = {
   title: 'Admin Login | LeadDesk Mini',
 }
 
-export default async function LoginPage() {
-  const session = await getServerSession(authOptions)
-  
-  if (session) {
-    redirect('/admin')
-  }
-
+export default function LoginPage() {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center relative overflow-hidden bg-slate-50 px-4">
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full blur-[100px] pointer-events-none opacity-50" />
