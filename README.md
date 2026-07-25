@@ -20,7 +20,7 @@
 | Authentication | NextAuth.js with JWT sessions — no hardcoded strings |
 | Forgot password | JWT-based reset link sent via email (Nodemailer + Gmail SMTP) |
 | Admin management | Logged-in admin can create new admin accounts from the dashboard |
-| Security | 3-layer auth guard: Edge Middleware → Server Component → API Route |
+| Security | 2-layer auth guard: Server Component → API Route |
 
 ---
 
@@ -80,16 +80,15 @@ Uses **NextAuth.js `CredentialsProvider`** with a **JWT session strategy**:
 4. On success, NextAuth issues a signed **JWT** stored in a secure `httpOnly` cookie
 5. The JWT is verified on every protected request
 
-### Route Protection (3 Layers)
+### Route Protection (2 Layers)
 ```
-Request → [1] Edge Middleware (withAuth) → [2] Server Component (getServerSession) → [3] API Handler (getServerSession)
+Request → [1] Server Component (getServerSession) → [2] API Handler (getServerSession)
 ```
 
 | Layer | Where | What it does |
 |---|---|---|
-| 1 | `src/middleware.ts` | Blocks unauthenticated access at the CDN edge before any server code runs |
-| 2 | `src/app/admin/page.tsx` | Server-side `getServerSession()` double-check before rendering |
-| 3 | `src/app/api/admin/create/route.ts` | API-level session guard so the endpoint is unusable even if layers 1+2 were bypassed |
+| 1 | `src/app/admin/page.tsx` | Server-side `getServerSession()` double-check before rendering |
+| 2 | `src/app/api/admin/create/route.ts` | API-level session guard so the endpoint is unusable even if layer 1 was bypassed |
 
 ### Forgot Password
 1. Admin submits their email at `/admin/forgot-password`
@@ -164,7 +163,7 @@ I used **AI assistance (Gemini/Claude via Antigravity IDE)** in the following ar
 - Writing the Nodemailer email HTML template
 - Debugging the Prisma SQLite/PostgreSQL adapter configuration
 
-All architecture decisions, security model design (3-layer auth), data model choices, and product judgments were made by me. The AI was used as a pair-programming tool, not as a replacement for judgment.
+All architecture decisions, security model design, data model choices, and product judgments were made by me. The AI was used as a pair-programming tool, not as a replacement for judgment.
 
 ---
 
@@ -198,7 +197,6 @@ leaddesk-mini/
 │       ├── auth.ts                    # NextAuth config
 │       ├── email.ts                   # Nodemailer email sender
 │       └── validations.ts             # Zod schemas
-└── middleware.ts                      # Edge-level route protection
 ```
 
 ---
@@ -215,7 +213,7 @@ leaddesk-mini/
 ### Task B (100 pts)
 | Criterion | Weight | Notes |
 |---|---|---|
-| Auth implementation | 40 | NextAuth JWT + bcrypt + 3-layer protection + forgot password |
+| Auth implementation | 40 | NextAuth JWT + bcrypt + robust server-side protection + forgot password |
 | Deployment reliability | 30 | Vercel + Neon Postgres, environment variables, no local state |
 | Documentation + walkthrough | 30 | This README + Loom video |
 
